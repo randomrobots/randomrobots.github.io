@@ -56,7 +56,7 @@ button {
     position: absolute;
     content: '';
     border-radius: 1px;
-    animation: indicator 3s linear;
+    animation: indicator 3s linear infinite;
     transform-origin: left center;
 }
 
@@ -82,9 +82,9 @@ h1{
     </defs>
 </svg>
 <script>
-setTimeout(() => location.reload(), 3000);
+setInterval(() => render(), 3000);
 
-function _render(mouth, eyes, accesory, face, body) {
+function _setSVG(mouth, eyes, accesory, face, body) {
     var s = document.getElementById('output').style;
     s.backgroundImage = ` 
         url('data:image/svg+xml,${mouth}'), 
@@ -95,23 +95,25 @@ function _render(mouth, eyes, accesory, face, body) {
     s.backgroundColor = backgroundColor()
 }
 
-function render() {
+function _render() {
     const args = Array.from(arguments);
     const foreground = foregroundColor();
     const newArgs = args.map(arg => replaceColor(arg, foreground))
     console.log(newArgs)
-    _render.apply(null, newArgs)
+    _setSVG.apply(null, newArgs)
 }
 
-window.onload = function() {
+function render() {
     const f = features;
-    render(
+    _render(
         randomElement(f.mouth),
         randomElement(f.eyes),
         randomElement(f.accesory),
         randomElement(f.face),
         randomElement(f.body))
 }
+
+window.onload = render
 
 function replaceColor(string, foreground) {
     return string.replace(/#26a9e0/g, foreground).replace(/#26A9E0/g, foreground)
